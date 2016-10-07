@@ -85,7 +85,8 @@ init =
   Task.succeed Nothing
 
 
-(&>) t1 t2 = t1 `Task.andThen` \_ -> t2
+(&>) task1 task2 =
+  Task.andThen (\_ -> task2) task1
 
 
 onEffects : Platform.Router msg Size -> List (MySub msg) -> State msg -> Task Never (State msg)
@@ -99,10 +100,8 @@ onEffects router newSubs oldState =
         &> Task.succeed Nothing
 
     (Nothing, _) ->
-      Process.spawn (Dom.onWindow "resize" (Json.succeed ()) (\_ -> size `Task.andThen` Platform.sendToSelf router))
-        `Task.andThen` \pid ->
-
-      Task.succeed (Just { subs = newSubs, pid = pid })
+      Process.spawn (Dom.onWindow "resize" (Json.succeed ()) (\_ -> Task.andThen (Platform.sendToSelf router) size))
+        |> Task.andThen (\pid -> Task.succeed (Just { subs = newSubs, pid = pid }))
 
     (Just {pid}, _) ->
       Task.succeed (Just { subs = newSubs, pid = pid })
