@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "summary": "Get the dimensions of the window / screen size.",
     "repository": "http://github.com/elm-lang/window.git",
     "license": "BSD3",
