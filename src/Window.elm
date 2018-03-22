@@ -6,6 +6,7 @@ effect module Window
         , width
         , height
         , resizes
+        , scrollTo
         )
 
 {-| Your application lives in some sort of window. This library helps you
@@ -52,6 +53,13 @@ width =
 height : Task x Int
 height =
     Task.map .height size
+
+
+{-| Scroll the window
+-}
+scrollTo : Int -> Int -> Task x ()
+scrollTo x y =
+    Native.Window.scrollTo x y
 
 
 {-| Subscribe to any changes in window size.
